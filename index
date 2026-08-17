@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>物理ギミック連動テスト</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 50px; }
+    button { padding: 10px 20px; font-size: 16px; margin: 10px; cursor: pointer; }
+    #gameArea { display: none; margin-top: 30px; padding: 20px; border: 2px solid #333; }
+    .hidden-message { color: red; font-size: 24px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h1>PC連動システム テスト</h1>
+  
+  <!-- 最初はブラウザにUSBへのアクセス許可をもらうためのボタンが必要です -->
+  <button id="connectBtn">Arduinoと接続する</button>
+
+  <div id="gameArea">
+    <h2>【ミッション】<br>4番ピンから伸びているワイヤーを、GNDに接続せよ！</h2>
+    <p id="statusMessage">配線を待機中...</p>
+
+    <hr>
+    
+    <h3>Webから物理ライトを操作するテスト</h3>
+    <button id="ledOnBtn">ライトを点灯 (Aを送信)</button>
+    <button id="ledOffBtn">ライトを消灯 (Bを送信)</button>
+  </div>
+
+  <script>
+    let port;
+    let writer;
+
+    // 「接続する」ボタンを押したときの処理
+    document.getElementById('connectBtn').addEventListener('click', async () => {
+      try {
+        // ポート選択画面を出す
+        port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 9600 }); // Arduinoと同じ9600に合わせる
+        
+        // 画面を切り替える
+        document.getElementById('connectBtn').style.display = 'none';
+        document.getElementById('gameArea').style.display = 'block';
+        
+        writer = port.writable.getWriter();
+        readLoop(); // Arduinoからのメッセージを監視するループ開始
+      } catch (e) {
+        console.error("接続エラー:", e);
+        alert("接続がキャンセルされたか、エラーが発生しました。");
+      }
+    });
+
+    // Arduinoから送られてくる文字を読み取る関数
+    async function readLoop() {
+      const reader = port.readable.getReader();
+      const decoder = new TextDecoder();
+      try {
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          const text = decoder.decode(value);
+          
+          // Arduinoから「CONNECTED」という文字が来たら！
+          if (text.includes("CONNECTED")) {
+            const statusObj = document.getElementById('statusMessage');
+            statusObj.innerHTML = "配線完了！！<br>次のステージへ遷移します...（という演出）";
+            statusObj.className = "hidden-message";
+          }
+        }
+      } catch (e) {
+        console.error("読み取りエラー:", e);
+      } finally {
+        reader.releaseLock();
+      }
+    }
+
+    // WebからArduinoへ文字を送る関数
+    async function sendCommand(cmd) {
+      if (writer) {
+        const encoder = new TextEncoder();
+        await writer.write(encoder.encode(cmd));
+      }
+    }
+
+    // ボタンを押したときにAやBを送信
+    document.getElementById('ledOnBtn').addEventListener('click', () => sendCommand('A'));
+    document.getElementById('ledOffBtn').addEventListener('click', () => sendCommand('B'));
+  </script>
+
+</body>
+</html>

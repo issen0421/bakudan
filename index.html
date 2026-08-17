@@ -2,26 +2,61 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>物理ギミック連動テスト</title>
+  <title>BOMB DEFUSAL TERMINAL</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 50px; }
-    button { padding: 10px 20px; font-size: 16px; margin: 10px; cursor: pointer; }
-    #gameArea { display: none; margin-top: 30px; padding: 20px; border: 2px solid #333; }
-    .hidden-message { color: red; font-size: 24px; font-weight: bold; }
+    /* ハッカー風のカッコいいデザイン */
+    body { background-color: #050505; color: #0f0; font-family: 'Courier New', monospace; text-align: center; padding: 20px; }
+    h1 { text-shadow: 0 0 10px #0f0; letter-spacing: 5px; }
+    .btn { background: transparent; color: #0f0; border: 2px solid #0f0; padding: 15px 30px; font-size: 20px; cursor: pointer; margin: 20px; box-shadow: 0 0 10px #0f0 inset; transition: 0.3s; font-weight: bold; }
+    .btn:hover { background: #0f0; color: #000; }
+    
+    #gameArea { display: none; margin-top: 30px; }
+    
+    /* ステップごとの箱 */
+    .step-box { border: 1px dashed #333; padding: 20px; margin: 15px auto; width: 80%; max-width: 600px; color: #444; transition: 0.3s; }
+    .active-step { border: 2px solid #0f0; color: #0f0; box-shadow: 0 0 15px #0f0; }
+    .completed-step { border: 1px solid #050; color: #050; text-decoration: line-through; }
+    
+    /* 警告メッセージ（赤く点滅） */
+    #warningMsg { color: #f00; text-shadow: 0 0 15px #f00; font-size: 24px; display: none; font-weight: bold; animation: blink 0.5s infinite; padding: 20px; border: 2px solid #f00; width: 80%; max-width: 600px; margin: 0 auto; }
+    @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+    
+    .clear-msg { color: #0ff; text-shadow: 0 0 20px #0ff; font-size: 30px; display: none; }
   </style>
 </head>
 <body>
 
-  <h1>PC連動システム テスト</h1>
-  <button id="connectBtn">Arduinoと接続する</button>
+  <h1>SYSTEM OVERRIDE TERMINAL</h1>
+  <button id="connectBtn" class="btn">▶ INITIATE CONNECTION</button>
 
   <div id="gameArea">
-    <h2>【ミッション】<br>4番ピンから伸びているワイヤーを、GNDに接続せよ！</h2>
-    <p id="statusMessage">配線を待機中...</p>
-    <hr>
-    <h3>Webから物理ライトを操作するテスト</h3>
-    <button id="ledOnBtn">ライトを点灯 (Aを送信)</button>
-    <button id="ledOffBtn">ライトを消灯 (Bを送信)</button>
+    <div id="warningMsg">⚠ 警告：必須バイパス回線が切断されました！直ちに再接続してください！ ⚠</div>
+
+    <div id="step1" class="step-box active-step">
+      <h2>[ PHASE 1 ]</h2>
+      <p>指示：メイン電源コード（4番）をGNDに接続せよ。</p>
+    </div>
+
+    <div id="step2" class="step-box">
+      <h2>[ PHASE 2 ]</h2>
+      <p>指示：セキュリティ解除コード（5番）をGNDに接続せよ。</p>
+    </div>
+
+    <div id="step3" class="step-box">
+      <h2>[ PHASE 3 ]</h2>
+      <p>指示：最終起爆シーケンス停止コード（6番）をGNDに接続せよ。</p>
+    </div>
+
+    <div id="clearMsg" class="clear-msg">
+      <h2>★ ALL SYSTEMS CLEARED ★</h2>
+      <p>物理ギミックの解除に成功しました。</p>
+    </div>
+
+    <hr style="border-color: #333; margin: 40px 0;">
+    
+    <h3>[ OVERRIDE MODULE ]</h3>
+    <button id="ledOnBtn" class="btn">▶ FORCE LIGHT ON</button>
+    <button id="ledOffBtn" class="btn">▶ FORCE LIGHT OFF</button>
   </div>
 
   <script>
@@ -32,43 +67,85 @@
       try {
         port = await navigator.serial.requestPort();
         await port.open({ baudRate: 9600 }); 
-        
         document.getElementById('connectBtn').style.display = 'none';
         document.getElementById('gameArea').style.display = 'block';
-        
         writer = port.writable.getWriter();
         readLoop(); 
       } catch (e) {
-        console.error("接続エラー:", e);
-        alert("接続エラーが発生しました。");
+        alert("接続エラー");
       }
     });
 
-    // ★ここを強化しました！（細切れの文字をバケツに貯める作戦）
     async function readLoop() {
       const reader = port.readable.getReader();
       const decoder = new TextDecoder();
-      let buffer = ""; // 文字を貯めておくバケツ
+      let buffer = ""; 
 
       try {
         while (true) {
           const { value, done } = await reader.read();
           if (done) break;
           
-          buffer += decoder.decode(value); // 届いた文字をバケツに追加
+          buffer += decoder.decode(value);
+          // 改行ごとにデータを切り分ける（データが混ざるのを防ぐ完全版）
+          let lines = buffer.split('\n');
+          buffer = lines.pop(); // 未完成の最後の行はバケツに残す
           
-          // バケツの中に「CONNECTED」が揃ったら！
-          if (buffer.includes("CONNECTED")) {
-            const statusObj = document.getElementById('statusMessage');
-            statusObj.innerHTML = "配線完了！！<br>次のステージへ遷移します...（という演出）";
-            statusObj.className = "hidden-message";
-            buffer = ""; // 反応したらバケツを空にする
+          for (let line of lines) {
+            line = line.trim();
+            if (line.startsWith("S:")) {
+              let states = line.substring(2).split(','); // "1,0,0" を切り分け
+              updateGameLogic(parseInt(states[0]), parseInt(states[1]), parseInt(states[2]));
+            }
           }
         }
       } catch (e) {
-        console.error("読み取りエラー:", e);
+        console.error(e);
       } finally {
         reader.releaseLock();
+      }
+    }
+
+    // ゲームの進行ロジック
+    function updateGameLogic(s1, s2, s3) {
+      let w = document.getElementById('warningMsg');
+      let st1 = document.getElementById('step1');
+      let st2 = document.getElementById('step2');
+      let st3 = document.getElementById('step3');
+      let clr = document.getElementById('clearMsg');
+
+      // 一旦すべての警告とクリア表示を消す
+      w.style.display = 'none';
+      clr.style.display = 'none';
+
+      if (s1 === 1 && s2 === 1 && s3 === 1) {
+        // 全て接続完了！
+        st1.className = 'step-box completed-step';
+        st2.className = 'step-box completed-step';
+        st3.className = 'step-box completed-step';
+        clr.style.display = 'block';
+      } 
+      else if (s1 === 1 && s2 === 1 && s3 === 0) {
+        // STEP 2まで完了、STEP 3待ち
+        st1.className = 'step-box completed-step';
+        st2.className = 'step-box completed-step';
+        st3.className = 'step-box active-step';
+      } 
+      else if (s1 === 1 && s2 === 0 && s3 === 0) {
+        // STEP 1完了、STEP 2待ち
+        st1.className = 'step-box completed-step';
+        st2.className = 'step-box active-step';
+        st3.className = 'step-box';
+      } 
+      else if (s1 === 0 && s2 === 0 && s3 === 0) {
+        // 最初から（STEP 1待ち）
+        st1.className = 'step-box active-step';
+        st2.className = 'step-box';
+        st3.className = 'step-box';
+      } 
+      else {
+        // 順番を間違えたり、途中の線を抜いた場合（例：s1=0, s2=1 など）
+        w.style.display = 'block'; // 赤い警告を点滅させる！
       }
     }
 

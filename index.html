@@ -2,27 +2,22 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>時限爆弾 起動システム</title>
+  <title>時限爆弾 組み立てシステム</title>
   <style>
-    body { background-color: #111; color: #fff; font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif; text-align: center; padding: 20px; }
-    h1 { color: #0f0; letter-spacing: 2px; }
-    
-    /* ボタンのデザイン */
-    .btn { background: #333; color: #fff; border: 2px solid #0f0; padding: 15px 30px; font-size: 20px; cursor: pointer; border-radius: 5px; transition: 0.3s; font-weight: bold; }
+    body { background-color: #111; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
+    h1 { color: #0f0; }
+    .btn { background: #333; color: #fff; border: 2px solid #0f0; padding: 10px 20px; font-size: 18px; cursor: pointer; border-radius: 5px; transition: 0.3s; margin-top: 10px; }
     .btn:hover { background: #0f0; color: #000; }
     
-    #gameArea { display: none; margin-top: 30px; }
+    #gameArea { display: none; margin-top: 20px; }
     
-    /* 手順の箱 */
-    .step-box { border: 2px dashed #555; padding: 20px; margin: 15px auto; width: 80%; max-width: 600px; color: #777; transition: 0.3s; background: #222; border-radius: 8px;}
-    .active-step { border: 2px solid #0f0; color: #0f0; box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); background: #1a331a; }
-    .completed-step { border: 2px solid #050; color: #050; background: #111; }
+    .step-box { border: 2px dashed #555; padding: 15px; margin: 10px auto; width: 80%; max-width: 600px; color: #555; background: #222; border-radius: 8px; display: none; }
+    .active-step { border: 2px solid #0f0; color: #fff; box-shadow: 0 0 15px rgba(0,255,0,0.3); background: #1a331a; display: block; }
+    .completed-step { border: 2px solid #050; color: #050; background: #111; display: block; }
     
-    /* 警告メッセージ */
     #warningMsg { color: #ff3333; font-size: 20px; display: none; font-weight: bold; padding: 15px; border: 2px solid #ff3333; width: 80%; max-width: 600px; margin: 0 auto; background: #330000; border-radius: 8px;}
     
-    /* 爆弾起動中・爆発・クリアの特別画面 */
-    .screen-armed { color: #ff9900; font-size: 30px; font-weight: bold; text-shadow: 0 0 10px #ff9900; animation: blink 1s infinite; }
+    .screen-armed { color: #ff9900; font-size: 30px; font-weight: bold; text-shadow: 0 0 10px #ff9900; animation: blink 1s infinite; padding: 30px; }
     .screen-boom { color: #ff0000; font-size: 50px; font-weight: bold; background: #440000; padding: 50px; border-radius: 10px; }
     .screen-clear { color: #00ffff; font-size: 50px; font-weight: bold; background: #003333; padding: 50px; border-radius: 10px; }
     
@@ -31,50 +26,59 @@
 </head>
 <body>
 
-  <h1>機密システム 接続画面</h1>
-  <p>基板とパソコンを通信ケーブルで接続してください。</p>
+  <h1>デバイス構築システム</h1>
   <button id="connectBtn" class="btn">▶ 基板に接続する</button>
 
   <div id="gameArea">
-    <div id="warningMsg">⚠ エラー：途中で線が抜けました！元に戻してください！ ⚠</div>
+    <div id="warningMsg">⚠ エラー：接続済みの線が抜けました！元に戻してください！ ⚠</div>
 
-    <!-- 普段の配線画面 -->
     <div id="wiringSteps">
+      <!-- 手動ステップ -->
       <div id="step1" class="step-box active-step">
-        <h2>【 手順 1 】</h2>
-        <p>指示：4番ピンのワイヤーを、GND（青い線の列）に挿し込んでください。</p>
+        <h2>【 手順 1 】タイマーの設置</h2>
+        <p>4桁のデジタル時計を基板に挿し、2番・3番ピン等と繋いでください。</p>
+        <button id="btnStep1" class="btn">配線完了</button>
       </div>
       <div id="step2" class="step-box">
-        <h2>【 手順 2 】</h2>
-        <p>指示：5番ピンのワイヤーを、GND（青い線の列）に挿し込んでください。</p>
+        <h2>【 手順 2 】スピーカーの設置</h2>
+        <p>黒い丸型のブザーを、12番ピンとGNDに繋いでください。</p>
+        <button id="btnStep2" class="btn">配線完了</button>
       </div>
+      
+      <!-- 自動感知ステップ -->
       <div id="step3" class="step-box">
-        <h2>【 手順 3 】</h2>
-        <p>指示：6番ピンのワイヤーを、GND（青い線の列）に挿し込んでください。</p>
+        <h2>【 手順 3 】解除コードの準備</h2>
+        <p>★重要★ 7番ピンのワイヤーを、GND（青い線の列）に繋いでください。</p>
+      </div>
+      <div id="step4" class="step-box">
+        <h2>【 手順 4 】メイン電源</h2>
+        <p>4番ピンのワイヤーを、GNDに繋いでください。</p>
+      </div>
+      <div id="step5" class="step-box">
+        <h2>【 手順 5 】セキュリティ解除</h2>
+        <p>5番ピンのワイヤーを、GNDに繋いでください。</p>
+      </div>
+      <div id="step6" class="step-box">
+        <h2>【 手順 6 】最終起動コード</h2>
+        <p>6番ピンのワイヤーをGNDに繋ぐと、システムが起動します。</p>
       </div>
     </div>
 
-    <!-- 爆弾起動中の画面 -->
     <div id="armedScreen" style="display:none;" class="screen-armed">
       ⚠ 警告：時限爆弾が起動しました！ ⚠<br><br>
-      <span style="font-size:20px; color:#fff;">信号機がすべて消える『魔の2秒間』を狙い、<br>7番ピンの解除コードを引き抜け！</span>
+      <span style="font-size:20px; color:#fff;">すべての信号機が消灯する『魔の2秒間』を狙い、<br>【手順3】で繋いだ「7番ピンの線」を引き抜け！</span>
     </div>
-
-    <!-- 爆発画面 -->
-    <div id="boomScreen" style="display:none;" class="screen-boom">
-      💥 爆 発 し ま し た 💥<br>
-      <span style="font-size:20px;">タイミングが間違っていたか、時間切れです。</span>
-    </div>
-
-    <!-- クリア画面 -->
-    <div id="clearScreen" style="display:none;" class="screen-clear">
-      ✨ 爆弾解除 成功 ✨<br>
-      <span style="font-size:20px;">素晴らしい！見事にシステムを停止させました。</span>
-    </div>
+    <div id="boomScreen" style="display:none;" class="screen-boom">💥 爆 発 し ま し た 💥</div>
+    <div id="clearScreen" style="display:none;" class="screen-clear">✨ 爆弾解除 成功 ✨</div>
   </div>
 
   <script>
     let port;
+    let manualStep1Done = false;
+    let manualStep2Done = false;
+
+    document.getElementById('btnStep1').addEventListener('click', () => { manualStep1Done = true; updateUI(); });
+    document.getElementById('btnStep2').addEventListener('click', () => { manualStep2Done = true; updateUI(); });
 
     document.getElementById('connectBtn').addEventListener('click', async () => {
       try {
@@ -84,9 +88,13 @@
         document.getElementById('gameArea').style.display = 'block';
         readLoop(); 
       } catch (e) {
-        alert("接続がキャンセルされたか、エラーが発生しました。");
+        alert("エラーが発生しました。");
       }
     });
+
+    // 最新の状態を保存しておく変数
+    let currentS4=0, currentS5=0, currentS6=0, currentS7=0;
+    let currentArmed=0, currentDefused=0, currentExploded=0;
 
     async function readLoop() {
       const reader = port.readable.getReader();
@@ -106,10 +114,14 @@
             line = line.trim();
             if (line.startsWith("S:")) {
               let states = line.substring(2).split(','); 
-              updateGameLogic(
-                parseInt(states[0]), parseInt(states[1]), parseInt(states[2]), 
-                parseInt(states[3]), parseInt(states[4]), parseInt(states[5])
-              );
+              currentS4 = parseInt(states[0]);
+              currentS5 = parseInt(states[1]);
+              currentS6 = parseInt(states[2]);
+              currentS7 = parseInt(states[3]);
+              currentArmed = parseInt(states[4]);
+              currentDefused = parseInt(states[5]);
+              currentExploded = parseInt(states[6]);
+              updateUI();
             }
           }
         }
@@ -120,60 +132,57 @@
       }
     }
 
-    function updateGameLogic(s1, s2, s3, armed, defused, exploded) {
-      // 画面の部品を変数にまとめる
+    function updateUI() {
       let w = document.getElementById('warningMsg');
       let stepsArea = document.getElementById('wiringSteps');
-      let st1 = document.getElementById('step1');
-      let st2 = document.getElementById('step2');
-      let st3 = document.getElementById('step3');
       
-      let screenArmed = document.getElementById('armedScreen');
-      let screenBoom = document.getElementById('boomScreen');
-      let screenClear = document.getElementById('clearScreen');
+      let st1 = document.getElementById('step1'); let st2 = document.getElementById('step2');
+      let st3 = document.getElementById('step3'); let st4 = document.getElementById('step4');
+      let st5 = document.getElementById('step5'); let st6 = document.getElementById('step6');
 
-      w.style.display = 'none'; // 警告は一旦消す
+      w.style.display = 'none'; 
 
-      // 状況に合わせて表示する画面を変える
-      if (exploded === 1) {
+      if (currentExploded === 1) {
         stepsArea.style.display = 'none';
-        screenArmed.style.display = 'none';
-        screenBoom.style.display = 'block';
+        document.getElementById('armedScreen').style.display = 'none';
+        document.getElementById('boomScreen').style.display = 'block';
         return;
       }
+      if (currentDefused === 1) {
+        stepsArea.style.display = 'none';
+        document.getElementById('armedScreen').style.display = 'none';
+        document.getElementById('clearScreen').style.display = 'block';
+        return;
+      }
+      if (currentArmed === 1) {
+        stepsArea.style.display = 'none';
+        document.getElementById('armedScreen').style.display = 'block';
+        return;
+      }
+
+      // 手動ステップの表示制御
+      st1.className = manualStep1Done ? 'step-box completed-step' : 'step-box active-step';
+      st2.className = manualStep1Done ? (manualStep2Done ? 'step-box completed-step' : 'step-box active-step') : 'step-box';
       
-      if (defused === 1) {
-        stepsArea.style.display = 'none';
-        screenArmed.style.display = 'none';
-        screenClear.style.display = 'block';
-        return;
-      }
+      if (!manualStep1Done || !manualStep2Done) return; // 手動が終わるまでは自動感知画面は進めない
 
-      if (armed === 1) {
-        stepsArea.style.display = 'none';
-        screenArmed.style.display = 'block';
-        return;
+      // ここから自動感知の表示制御（順番通りに挿させるロジック）
+      if (currentS7 === 1 && currentS4 === 1 && currentS5 === 0) {
+        st3.className = 'step-box completed-step'; st4.className = 'step-box completed-step'; st5.className = 'step-box active-step'; st6.className = 'step-box';
       }
-
-      // 爆弾が起動する前の配線ステップ
-      if (s1 === 1 && s2 === 1 && s3 === 0) {
-        st1.className = 'step-box completed-step';
-        st2.className = 'step-box completed-step';
-        st3.className = 'step-box active-step';
-      } 
-      else if (s1 === 1 && s2 === 0 && s3 === 0) {
-        st1.className = 'step-box completed-step';
-        st2.className = 'step-box active-step';
-        st3.className = 'step-box';
-      } 
-      else if (s1 === 0 && s2 === 0 && s3 === 0) {
-        st1.className = 'step-box active-step';
-        st2.className = 'step-box';
-        st3.className = 'step-box';
-      } 
+      else if (currentS7 === 1 && currentS4 === 0 && currentS5 === 0) {
+        st3.className = 'step-box completed-step'; st4.className = 'step-box active-step'; st5.className = 'step-box'; st6.className = 'step-box';
+      }
+      else if (currentS7 === 0 && currentS4 === 0 && currentS5 === 0) {
+        st3.className = 'step-box active-step'; st4.className = 'step-box'; st5.className = 'step-box'; st6.className = 'step-box';
+      }
       else {
-        // 順番を間違えたら赤く警告！
-        w.style.display = 'block'; 
+        // 先走って挿したり、途中で抜いたりした場合
+        st3.className = currentS7 ? 'step-box completed-step' : 'step-box active-step';
+        st4.className = currentS4 ? 'step-box completed-step' : 'step-box active-step';
+        st5.className = currentS5 ? 'step-box completed-step' : 'step-box active-step';
+        st6.className = currentS6 ? 'step-box completed-step' : 'step-box active-step';
+        w.style.display = 'block'; // 警告表示
       }
     }
   </script>

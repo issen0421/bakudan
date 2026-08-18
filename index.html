@@ -17,7 +17,6 @@
     
     #warningMsg { color: #ff3333; font-size: 20px; display: none; font-weight: bold; padding: 15px; border: 2px solid #ff3333; width: 80%; max-width: 600px; margin: 0 auto; background: #330000; border-radius: 8px;}
     
-    /* 起動準備完了エリア */
     #launchArea { display: none; margin-top: 30px; border: 2px solid #0f0; padding: 30px; background: #002200; border-radius: 10px; width: 80%; max-width: 600px; margin: 30px auto; box-shadow: 0 0 20px #0f0; }
     
     .screen-armed { color: #ff9900; font-size: 30px; font-weight: bold; text-shadow: 0 0 10px #ff9900; animation: blink 1s infinite; padding: 30px; }
@@ -36,13 +35,13 @@
     <div id="warningMsg">⚠ エラー：接続済みの線が抜けました！元に戻してください！ ⚠</div>
 
     <div id="wiringSteps">
-      <!-- 手動ステップ -->
+      <!-- 【手動ステップ】 -->
       <div id="step0" class="step-box active-step">
-        <h2>【 手順 0 】共通アース（GND）の構築</h2>
+        <h2>【 手順 0 】共通アースの構築</h2>
         <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
-          全ての回路の基準となるマイナス極（GND）を構築せよ。<br>
+          全ての回路の基準となるマイナス極を構築せよ。<br>
           ・ワイヤーを1本用意し、Arduinoの「<b>GND</b>」ピンから、<br>
-           ブレッドボード左端の「<b>青い線の列</b>」の適当な穴へ繋ぐ。
+           白い板の左端にある「<b>青い線の列（−の列）</b>」の適当な穴へ繋ぐ。
         </div><br>
         <button id="btnStep0" class="btn">配線完了</button>
       </div>
@@ -53,8 +52,8 @@
           ディスプレイ裏面の刻印を確認し、4本の線を接続せよ。<br>
           ・「<b>CLK</b>」 ➔ Arduinoの「<b>2</b>」番ピン<br>
           ・「<b>DIO</b>」 ➔ Arduinoの「<b>3</b>」番ピン<br>
-          ・「<b>VCC</b>」 ➔ Arduinoの「<b>5V</b>」ピン<br>
-          ・「<b>GND</b>」 ➔ ブレッドボードの「<b>青い線の列（GND）</b>」
+          ・「<b>5V</b>」 ➔ Arduinoの「<b>5V</b>」ピン<br>
+          ・「<b>GND</b>」 ➔ 白い板の「<b>青い線の列（−の列）</b>」
         </div><br>
         <button id="btnStep1" class="btn">配線完了</button>
       </div>
@@ -62,34 +61,58 @@
       <div id="step2" class="step-box">
         <h2>【 手順 2 】警告スピーカーの設置</h2>
         <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
-          黒い円柱型のブザーを、空きスペースを経由して接続せよ。<br>
+          黒い円柱型のブザーを、白い板の空きスペースを経由して接続せよ。<br>
           <br>
           １．ブザー本体を挿す<br>
-           ・「<b>長い足</b>」をブレッドボードの「<b>27a</b>」へ<br>
-           ・「<b>短い足</b>」をブレッドボードの「<b>29a</b>」へ<br>
+           ・「<b>長い足</b>」を白い板の「<b>27a</b>」へ<br>
+           ・「<b>短い足</b>」を白い板の「<b>29a</b>」へ<br>
           ２．ワイヤーで中継する<br>
-           ・ワイヤー1：Arduinoの「<b>12</b>」から ➔ ブレッドボードの「<b>27b</b>」へ<br>
-           ・ワイヤー2：ブレッドボードの「<b>29b</b>」から ➔ 「<b>青い線の列（GND）</b>」へ
+           ・ワイヤー1：Arduinoの「<b>12</b>」番から ➔ 白い板の「<b>27b</b>」へ<br>
+           ・ワイヤー2：白い板の「<b>29b</b>」から ➔ 「<b>青い線の列（−の列）</b>」へ
         </div><br>
         <button id="btnStep2" class="btn">配線完了</button>
       </div>
-      
-      <!-- 自動感知ステップ -->
+
       <div id="step3" class="step-box">
-        <h2>【 手順 3 】解除コードの準備</h2>
-        <p>★重要★ 7番ピンのワイヤーを、GND（青い線の列）に繋いでください。</p>
+        <h2>【 手順 3 】信号機（LED）の設置</h2>
+        <div style="text-align: left; display: inline-block; font-size: 14px; line-height: 1.5;">
+          4つのLEDと抵抗器を接続せよ。※LEDの短い足はすべて「青い線の列（−の列）」へ。<br><br>
+          <b>◆ 自動車用（青/緑）</b><br>
+          ・ワイヤー: <b>8</b>番 ➔ <b>1a</b><br>
+          ・抵抗器: <b>1b</b> ➔ <b>5b</b><br>
+          ・LED: 長い足 <b>5a</b> / 短い足 <b>青い列</b><br><br>
+          <b>◆ 自動車用（赤）</b><br>
+          ・ワイヤー: <b>9</b>番 ➔ <b>8a</b><br>
+          ・抵抗器: <b>8b</b> ➔ <b>12b</b><br>
+          ・LED: 長い足 <b>12a</b> / 短い足 <b>青い列</b><br><br>
+          <b>◆ 歩行者用（青/緑）</b><br>
+          ・ワイヤー: <b>10</b>番 ➔ <b>15a</b><br>
+          ・抵抗器: <b>15b</b> ➔ <b>19b</b><br>
+          ・LED: 長い足 <b>19a</b> / 短い足 <b>青い列</b><br><br>
+          <b>◆ 歩行者用（赤）</b><br>
+          ・ワイヤー: <b>11</b>番 ➔ <b>22a</b><br>
+          ・抵抗器: <b>22b</b> ➔ <b>26b</b><br>
+          ・LED: 長い足 <b>26a</b> / 短い足 <b>青い列</b>
+        </div><br>
+        <button id="btnStep3" class="btn">配線完了</button>
       </div>
+      
+      <!-- 【自動感知ステップ】 -->
       <div id="step4" class="step-box">
-        <h2>【 手順 4 】メイン電源</h2>
-        <p>4番ピンのワイヤーを、GNDに繋いでください。</p>
+        <h2>【 手順 4 】解除コードの準備</h2>
+        <p>★重要★ 7番ピンのワイヤーを、「<b>青い線の列（−の列）</b>」に繋いでください。</p>
       </div>
       <div id="step5" class="step-box">
-        <h2>【 手順 5 】セキュリティ解除</h2>
-        <p>5番ピンのワイヤーを、GNDに繋いでください。</p>
+        <h2>【 手順 5 】メイン電源</h2>
+        <p>4番ピンのワイヤーを、「<b>青い線の列（−の列）</b>」に繋いでください。</p>
       </div>
       <div id="step6" class="step-box">
-        <h2>【 手順 6 】最終起動コード</h2>
-        <p>6番ピンのワイヤーを、GNDに繋いでください。</p>
+        <h2>【 手順 6 】セキュリティ解除</h2>
+        <p>5番ピンのワイヤーを、「<b>青い線の列（−の列）</b>」に繋いでください。</p>
+      </div>
+      <div id="step7" class="step-box">
+        <h2>【 手順 7 】最終起動コード</h2>
+        <p>6番ピンのワイヤーを、「<b>青い線の列（−の列）</b>」に繋いでください。</p>
       </div>
     </div>
 
@@ -103,7 +126,7 @@
     <!-- 状態画面 -->
     <div id="armedScreen" style="display:none;" class="screen-armed">
       ⚠ 警告：時限爆弾が起動しました！ ⚠<br><br>
-      <span style="font-size:20px; color:#fff;">すべての信号機が消灯する『魔の2秒間』を狙い、<br>【手順3】で繋いだ「7番ピンの線」を引き抜け！</span>
+      <span style="font-size:20px; color:#fff;">【手順3】で設置した信号機を注視せよ。<br>すべての信号が消灯する『魔の2秒間』を狙い、<br>【手順4】で繋いだ「7番ピンの線」を引き抜け！</span>
     </div>
     <div id="boomScreen" style="display:none;" class="screen-boom">💥 爆 発 し ま し た 💥</div>
     <div id="clearScreen" style="display:none;" class="screen-clear">✨ 爆弾解除 成功 ✨</div>
@@ -115,10 +138,12 @@
     let manualStep0Done = false;
     let manualStep1Done = false;
     let manualStep2Done = false;
+    let manualStep3Done = false;
 
     document.getElementById('btnStep0').addEventListener('click', () => { manualStep0Done = true; updateUI(); });
     document.getElementById('btnStep1').addEventListener('click', () => { manualStep1Done = true; updateUI(); });
     document.getElementById('btnStep2').addEventListener('click', () => { manualStep2Done = true; updateUI(); });
+    document.getElementById('btnStep3').addEventListener('click', () => { manualStep3Done = true; updateUI(); });
 
     document.getElementById('connectBtn').addEventListener('click', async () => {
       try {
@@ -133,7 +158,6 @@
       }
     });
 
-    // 起動ボタンを押した時の処理（Arduinoに「S」を送る）
     document.getElementById('startBtn').addEventListener('click', async () => {
       if (writer) {
         const encoder = new TextEncoder();
@@ -188,7 +212,7 @@
       let st0 = document.getElementById('step0'); let st1 = document.getElementById('step1');
       let st2 = document.getElementById('step2'); let st3 = document.getElementById('step3');
       let st4 = document.getElementById('step4'); let st5 = document.getElementById('step5');
-      let st6 = document.getElementById('step6');
+      let st6 = document.getElementById('step6'); let st7 = document.getElementById('step7');
 
       w.style.display = 'none'; 
 
@@ -214,8 +238,9 @@
       st0.className = manualStep0Done ? 'step-box completed-step' : 'step-box active-step';
       st1.className = manualStep0Done ? (manualStep1Done ? 'step-box completed-step' : 'step-box active-step') : 'step-box';
       st2.className = manualStep1Done ? (manualStep2Done ? 'step-box completed-step' : 'step-box active-step') : 'step-box';
+      st3.className = manualStep2Done ? (manualStep3Done ? 'step-box completed-step' : 'step-box active-step') : 'step-box';
       
-      if (!manualStep0Done || !manualStep1Done || !manualStep2Done) {
+      if (!manualStep0Done || !manualStep1Done || !manualStep2Done || !manualStep3Done) {
         launchArea.style.display = 'none';
         return; 
       }
@@ -230,23 +255,23 @@
         launchArea.style.display = 'none';
       }
 
-      // 自動感知の表示制御
+      // 自動感知の表示制御（S7 -> S4 -> S5 -> S6 の順）
       if (currentS7 === 1 && currentS4 === 1 && currentS5 === 0) {
-        st3.className = 'step-box completed-step'; st4.className = 'step-box completed-step'; st5.className = 'step-box active-step'; st6.className = 'step-box';
+        st4.className = 'step-box completed-step'; st5.className = 'step-box completed-step'; st6.className = 'step-box active-step'; st7.className = 'step-box';
       }
       else if (currentS7 === 1 && currentS4 === 0 && currentS5 === 0) {
-        st3.className = 'step-box completed-step'; st4.className = 'step-box active-step'; st5.className = 'step-box'; st6.className = 'step-box';
+        st4.className = 'step-box completed-step'; st5.className = 'step-box active-step'; st6.className = 'step-box'; st7.className = 'step-box';
       }
       else if (currentS7 === 0 && currentS4 === 0 && currentS5 === 0) {
-        st3.className = 'step-box active-step'; st4.className = 'step-box'; st5.className = 'step-box'; st6.className = 'step-box';
+        st4.className = 'step-box active-step'; st5.className = 'step-box'; st6.className = 'step-box'; st7.className = 'step-box';
       }
       else {
         // 抜け落ち・順番間違い
-        st3.className = currentS7 ? 'step-box completed-step' : 'step-box active-step';
-        st4.className = currentS4 ? 'step-box completed-step' : 'step-box active-step';
-        st5.className = currentS5 ? 'step-box completed-step' : 'step-box active-step';
-        st6.className = currentS6 ? 'step-box completed-step' : 'step-box active-step';
-        w.style.display = 'block'; // 警告表示
+        st4.className = currentS7 ? 'step-box completed-step' : 'step-box active-step';
+        st5.className = currentS4 ? 'step-box completed-step' : 'step-box active-step';
+        st6.className = currentS5 ? 'step-box completed-step' : 'step-box active-step';
+        st7.className = currentS6 ? 'step-box completed-step' : 'step-box active-step';
+        w.style.display = 'block'; 
       }
     }
   </script>

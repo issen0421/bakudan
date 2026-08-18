@@ -32,16 +32,29 @@
   <div id="gameArea">
     <div id="warningMsg">⚠ エラー：接続済みの線が抜けました！元に戻してください！ ⚠</div>
 
-    <div id="wiringSteps">
+<div id="wiringSteps">
       <!-- 手動ステップ -->
       <div id="step1" class="step-box active-step">
-        <h2>【 手順 1 】タイマーの設置</h2>
-        <p>4桁のデジタル時計を基板に挿し、2番・3番ピン等と繋いでください。</p>
+        <h2>【 手順 1 】タイマーモジュールの接続</h2>
+        <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
+          ディスプレイ裏面の刻印を確認し、4本の線を以下の通りに接続せよ。<br>
+          ・「<b>CLK</b>」の線 ➔ Arduinoの「<b>2</b>」番ピン<br>
+          ・「<b>DIO</b>」の線 ➔ Arduinoの「<b>3</b>」番ピン<br>
+          ・「<b>VCC</b>」の線 ➔ Arduinoの「<b>5V</b>」ピン<br>
+          ・「<b>GND</b>」の線 ➔ ブレッドボードの「<b>青い線の列（GND）</b>」
+        </div>
+        <br>
         <button id="btnStep1" class="btn">配線完了</button>
       </div>
+      
       <div id="step2" class="step-box">
-        <h2>【 手順 2 】スピーカーの設置</h2>
-        <p>黒い丸型のブザーを、12番ピンとGNDに繋いでください。</p>
+        <h2>【 手順 2 】警告スピーカーの設置</h2>
+        <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
+          黒い円柱型のブザーを、以下の通りに接続せよ。<br>
+          ・「<b>長い足</b>」 ➔ Arduinoの「<b>12</b>」番ピン<br>
+          ・「<b>短い足</b>」 ➔ ブレッドボードの「<b>青い線の列（GND）</b>」
+        </div>
+        <br>
         <button id="btnStep2" class="btn">配線完了</button>
       </div>
       

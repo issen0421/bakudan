@@ -6,8 +6,10 @@
   <style>
     body { background-color: #111; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
     h1 { color: #0f0; }
-    .btn { background: #333; color: #fff; border: 2px solid #0f0; padding: 10px 20px; font-size: 18px; cursor: pointer; border-radius: 5px; transition: 0.3s; margin-top: 10px; }
+    .btn { background: #333; color: #fff; border: 2px solid #0f0; padding: 10px 20px; font-size: 18px; cursor: pointer; border-radius: 5px; transition: 0.3s; margin-top: 10px; margin-right: 10px; }
     .btn:hover { background: #0f0; color: #000; }
+    .btn-test { border-color: #00aaff; color: #00aaff; }
+    .btn-test:hover { background: #00aaff; color: #000; }
     
     #gameArea { display: none; margin-top: 20px; }
     
@@ -32,10 +34,9 @@
   <button id="connectBtn" class="btn">▶ 基板に接続する</button>
 
   <div id="gameArea">
-    <div id="warningMsg">⚠ エラー：接続済みの線が抜けました！元に戻してください！ ⚠</div>
+    <div id="warningMsg">⚠ エラー：解除コードが抜けています！接続してください！ ⚠</div>
 
     <div id="wiringSteps">
-      <!-- 【手動ステップ】 -->
       <div id="step0" class="step-box active-step">
         <h2>【 手順 0 】共通アースの構築</h2>
         <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
@@ -46,15 +47,16 @@
         <button id="btnStep0" class="btn">配線完了</button>
       </div>
 
-<div id="step1" class="step-box">
+      <div id="step1" class="step-box">
         <h2>【 手順 1 】タイマーモジュールの接続</h2>
         <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
-          ディスプレイ裏面の刻印を確認し、4本の線を順番に接続せよ。<br>
+          ディスプレイ裏面の刻印を確認し、4本の線を接続せよ。<br>
           ・「<b>CLK</b>」 ➔ Arduinoの「<b>2</b>」番ピン<br>
           ・「<b>DIO</b>」 ➔ Arduinoの「<b>3</b>」番ピン<br>
           ・「<b>GND</b>」 ➔ 白い板の「<b>青い線の列（−の列）</b>」<br>
           ・「<b>5V</b>」 ➔ Arduinoの「<b>5V</b>」ピン
         </div><br>
+        <button id="testTimerBtn" class="btn btn-test">テスト点灯（8888）</button>
         <button id="btnStep1" class="btn">配線完了</button>
       </div>
       
@@ -70,13 +72,15 @@
            ・ワイヤー1：Arduinoの「<b>12</b>」番から ➔ 白い板の「<b>1j</b>」へ<br>
            ・ワイヤー2：白い板の「<b>4j</b>」から ➔ 「<b>青い線の列（−の列）</b>」へ
         </div><br>
+        <!-- ★ここにブザーテストボタンを追加 -->
+        <button id="testBuzzerBtn" class="btn btn-test">テスト鳴動（1秒）</button>
         <button id="btnStep2" class="btn">配線完了</button>
       </div>
 
       <div id="step3" class="step-box">
         <h2>【 手順 3 】信号機（LED）の設置</h2>
         <div style="text-align: left; display: inline-block; font-size: 14px; line-height: 1.5;">
-          4つのLEDと抵抗器を接続せよ。※LEDの短い足はすべて「青い線の列（−の列）」へ。<br><br>
+          4つのLEDと抵抗器を接続せよ。※LEDの短い足はすべて「青い線の列」へ。<br><br>
           <b>◆ 自動車用（青/緑）</b><br>
           ・ワイヤー: <b>8</b>番 ➔ <b>1a</b><br>
           ・抵抗器: <b>1b</b> ➔ <b>5b</b><br>
@@ -94,25 +98,13 @@
           ・抵抗器: <b>22b</b> ➔ <b>26b</b><br>
           ・LED: 長い足 <b>26a</b> / 短い足 <b>青い列</b>
         </div><br>
+        <button id="testLedBtn" class="btn btn-test">テスト点灯（全ライト）</button>
         <button id="btnStep3" class="btn">配線完了</button>
       </div>
       
-      <!-- 【自動感知ステップ】 -->
       <div id="step4" class="step-box">
-        <h2>【 手順 4 】解除コードの準備</h2>
+        <h2>【 手順 4 】解除コードの設置</h2>
         <p>★重要★ 7番ピンのワイヤーを、「<b>青い線の列（−の列）</b>」に繋いでください。</p>
-      </div>
-      <div id="step5" class="step-box">
-        <h2>【 手順 5 】メイン電源</h2>
-        <p>4番ピンのワイヤーを、「<b>青い線の列（−の列）</b>」に繋いでください。</p>
-      </div>
-      <div id="step6" class="step-box">
-        <h2>【 手順 6 】セキュリティ解除</h2>
-        <p>5番ピンのワイヤーを、「<b>青い線の列（−の列）</b>」に繋いでください。</p>
-      </div>
-      <div id="step7" class="step-box">
-        <h2>【 手順 7 】最終起動コード</h2>
-        <p>6番ピンのワイヤーを、「<b>青い線の列（−の列）</b>」に繋いでください。</p>
       </div>
     </div>
 
@@ -140,11 +132,13 @@
     let manualStep2Done = false;
     let manualStep3Done = false;
 
+    // 手動ボタン処理
     document.getElementById('btnStep0').addEventListener('click', () => { manualStep0Done = true; updateUI(); });
     document.getElementById('btnStep1').addEventListener('click', () => { manualStep1Done = true; updateUI(); });
     document.getElementById('btnStep2').addEventListener('click', () => { manualStep2Done = true; updateUI(); });
     document.getElementById('btnStep3').addEventListener('click', () => { manualStep3Done = true; updateUI(); });
 
+    // 接続処理
     document.getElementById('connectBtn').addEventListener('click', async () => {
       try {
         port = await navigator.serial.requestPort();
@@ -158,14 +152,21 @@
       }
     });
 
-    document.getElementById('startBtn').addEventListener('click', async () => {
+    // コマンド送信関数
+    async function sendCommand(cmd) {
       if (writer) {
         const encoder = new TextEncoder();
-        await writer.write(encoder.encode('S'));
+        await writer.write(encoder.encode(cmd));
       }
-    });
+    }
 
-    let currentS4=0, currentS5=0, currentS6=0, currentS7=0;
+    // 各種ボタンの送信処理
+    document.getElementById('testTimerBtn').addEventListener('click', () => sendCommand('T'));
+    document.getElementById('testBuzzerBtn').addEventListener('click', () => sendCommand('B')); // ★ブザー用
+    document.getElementById('testLedBtn').addEventListener('click', () => sendCommand('L'));
+    document.getElementById('startBtn').addEventListener('click', () => sendCommand('S'));
+
+    let currentS7=0;
     let currentArmed=0, currentDefused=0, currentExploded=0;
 
     async function readLoop() {
@@ -186,13 +187,10 @@
             line = line.trim();
             if (line.startsWith("S:")) {
               let states = line.substring(2).split(','); 
-              currentS4 = parseInt(states[0]);
-              currentS5 = parseInt(states[1]);
-              currentS6 = parseInt(states[2]);
-              currentS7 = parseInt(states[3]);
-              currentArmed = parseInt(states[4]);
-              currentDefused = parseInt(states[5]);
-              currentExploded = parseInt(states[6]);
+              currentS7 = parseInt(states[0]);
+              currentArmed = parseInt(states[1]);
+              currentDefused = parseInt(states[2]);
+              currentExploded = parseInt(states[3]);
               updateUI();
             }
           }
@@ -211,8 +209,7 @@
       
       let st0 = document.getElementById('step0'); let st1 = document.getElementById('step1');
       let st2 = document.getElementById('step2'); let st3 = document.getElementById('step3');
-      let st4 = document.getElementById('step4'); let st5 = document.getElementById('step5');
-      let st6 = document.getElementById('step6'); let st7 = document.getElementById('step7');
+      let st4 = document.getElementById('step4');
 
       w.style.display = 'none'; 
 
@@ -242,35 +239,19 @@
       
       if (!manualStep0Done || !manualStep1Done || !manualStep2Done || !manualStep3Done) {
         launchArea.style.display = 'none';
+        st4.className = 'step-box'; 
         return; 
       }
 
-      // 全ての線が繋がっているか？
-      if (currentS7 === 1 && currentS4 === 1 && currentS5 === 1 && currentS6 === 1) {
+      // 手動ステップ完了後の制御（7番が挿さっているか）
+      if (currentS7 === 1) {
+        st4.className = 'step-box completed-step';
         stepsArea.style.display = 'none';
-        launchArea.style.display = 'block'; // 起動ボタン表示！
-        return;
+        launchArea.style.display = 'block'; 
       } else {
+        st4.className = 'step-box active-step';
         stepsArea.style.display = 'block';
         launchArea.style.display = 'none';
-      }
-
-      // 自動感知の表示制御（S7 -> S4 -> S5 -> S6 の順）
-      if (currentS7 === 1 && currentS4 === 1 && currentS5 === 0) {
-        st4.className = 'step-box completed-step'; st5.className = 'step-box completed-step'; st6.className = 'step-box active-step'; st7.className = 'step-box';
-      }
-      else if (currentS7 === 1 && currentS4 === 0 && currentS5 === 0) {
-        st4.className = 'step-box completed-step'; st5.className = 'step-box active-step'; st6.className = 'step-box'; st7.className = 'step-box';
-      }
-      else if (currentS7 === 0 && currentS4 === 0 && currentS5 === 0) {
-        st4.className = 'step-box active-step'; st5.className = 'step-box'; st6.className = 'step-box'; st7.className = 'step-box';
-      }
-      else {
-        // 抜け落ち・順番間違い
-        st4.className = currentS7 ? 'step-box completed-step' : 'step-box active-step';
-        st5.className = currentS4 ? 'step-box completed-step' : 'step-box active-step';
-        st6.className = currentS5 ? 'step-box completed-step' : 'step-box active-step';
-        st7.className = currentS6 ? 'step-box completed-step' : 'step-box active-step';
         w.style.display = 'block'; 
       }
     }

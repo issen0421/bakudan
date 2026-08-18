@@ -36,13 +36,13 @@
   <div id="gameArea">
     <div id="warningMsg">⚠ エラー：解除コードが抜けています！接続してください！ ⚠</div>
 
-    <div id="wiringSteps">
+<div id="wiringSteps">
       <div id="step0" class="step-box active-step">
         <h2>【 手順 0 】共通アースの構築</h2>
         <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
           全ての回路の基準となるマイナス極を構築せよ。<br>
           ・ワイヤーを1本用意し、Arduinoの「<b>GND</b>」ピンから、<br>
-           白い板の左端にある「<b>青い線の列（−の列）</b>」の適当な穴へ繋ぐ。
+           白い板の「<b>左側の青い線の列（−の列）</b>」の適当な穴へ繋ぐ。
         </div><br>
         <button id="btnStep0" class="btn">配線完了</button>
       </div>
@@ -53,7 +53,7 @@
           ディスプレイ裏面の刻印を確認し、4本の線を接続せよ。<br>
           ・「<b>CLK</b>」 ➔ Arduinoの「<b>2</b>」番ピン<br>
           ・「<b>DIO</b>」 ➔ Arduinoの「<b>3</b>」番ピン<br>
-          ・「<b>GND</b>」 ➔ 白い板の「<b>青い線の列（−の列）</b>」<br>
+          ・「<b>GND</b>」 ➔ 白い板の「<b>左側の青い線の列（−の列）</b>」<br>
           ・「<b>5V</b>」 ➔ Arduinoの「<b>5V</b>」ピン
         </div><br>
         <button id="testTimerBtn" class="btn btn-test">テスト点灯（8888）</button>
@@ -70,9 +70,8 @@
            ・「<b>短い足</b>」を白い板の「<b>4f</b>」へ<br>
           ２．ワイヤーで中継する<br>
            ・ワイヤー1：Arduinoの「<b>12</b>」番から ➔ 白い板の「<b>1j</b>」へ<br>
-           ・ワイヤー2：白い板の「<b>4j</b>」から ➔ 「<b>青い線の列（−の列）</b>」へ
+           ・ワイヤー2：白い板の「<b>4j</b>」から ➔ 「<b>左側の青い線の列（−の列）</b>」へ
         </div><br>
-        <!-- ★ここにブザーテストボタンを追加 -->
         <button id="testBuzzerBtn" class="btn btn-test">テスト鳴動（1秒）</button>
         <button id="btnStep2" class="btn">配線完了</button>
       </div>
@@ -80,23 +79,24 @@
       <div id="step3" class="step-box">
         <h2>【 手順 3 】信号機（LED）の設置</h2>
         <div style="text-align: left; display: inline-block; font-size: 14px; line-height: 1.5;">
-          4つのLEDと抵抗器を接続せよ。※LEDの短い足はすべて「青い線の列」へ。<br><br>
+          4つのLEDと抵抗器を接続せよ。<br>
+          ※LEDの短い足はすべて「<b>左側の青い線の列（−の列）</b>」へ。<br><br>
           <b>◆ 自動車用（青/緑）</b><br>
           ・ワイヤー: <b>8</b>番 ➔ <b>1a</b><br>
           ・抵抗器: <b>1b</b> ➔ <b>5b</b><br>
-          ・LED: 長い足 <b>5a</b> / 短い足 <b>青い列</b><br><br>
+          ・LED: 長い足 <b>5a</b> / 短い足 <b>左側の青い列</b><br><br>
           <b>◆ 自動車用（赤）</b><br>
           ・ワイヤー: <b>9</b>番 ➔ <b>8a</b><br>
           ・抵抗器: <b>8b</b> ➔ <b>12b</b><br>
-          ・LED: 長い足 <b>12a</b> / 短い足 <b>青い列</b><br><br>
+          ・LED: 長い足 <b>12a</b> / 短い足 <b>左側の青い列</b><br><br>
           <b>◆ 歩行者用（青/緑）</b><br>
           ・ワイヤー: <b>10</b>番 ➔ <b>15a</b><br>
           ・抵抗器: <b>15b</b> ➔ <b>19b</b><br>
-          ・LED: 長い足 <b>19a</b> / 短い足 <b>青い列</b><br><br>
+          ・LED: 長い足 <b>19a</b> / 短い足 <b>左側の青い列</b><br><br>
           <b>◆ 歩行者用（赤）</b><br>
           ・ワイヤー: <b>11</b>番 ➔ <b>22a</b><br>
           ・抵抗器: <b>22b</b> ➔ <b>26b</b><br>
-          ・LED: 長い足 <b>26a</b> / 短い足 <b>青い列</b>
+          ・LED: 長い足 <b>26a</b> / 短い足 <b>左側の青い列</b>
         </div><br>
         <button id="testLedBtn" class="btn btn-test">テスト点灯（全ライト）</button>
         <button id="btnStep3" class="btn">配線完了</button>
@@ -104,9 +104,10 @@
       
       <div id="step4" class="step-box">
         <h2>【 手順 4 】解除コードの設置</h2>
-        <p>★重要★ 7番ピンのワイヤーを、「<b>青い線の列（−の列）</b>」に繋いでください。</p>
+        <p>★重要★ 7番ピンのワイヤーを、「<b>左側の青い線の列（−の列）</b>」に繋いでください。</p>
       </div>
     </div>
+
 
     <!-- 起動準備完了エリア -->
     <div id="launchArea">

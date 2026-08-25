@@ -1,262 +1,96 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>時限爆弾 組み立てシステム</title>
-  <style>
-    body { background-color: #111; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
-    h1 { color: #0f0; }
-    .btn { background: #333; color: #fff; border: 2px solid #0f0; padding: 10px 20px; font-size: 18px; cursor: pointer; border-radius: 5px; transition: 0.3s; margin-top: 10px; margin-right: 10px; }
-    .btn:hover { background: #0f0; color: #000; }
-    .btn-test { border-color: #00aaff; color: #00aaff; }
-    .btn-test:hover { background: #00aaff; color: #000; }
-    
-    #gameArea { display: none; margin-top: 20px; }
-    
-    .step-box { border: 2px dashed #555; padding: 15px; margin: 10px auto; width: 80%; max-width: 600px; color: #555; background: #222; border-radius: 8px; display: none; }
-    .active-step { border: 2px solid #0f0; color: #fff; box-shadow: 0 0 15px rgba(0,255,0,0.3); background: #1a331a; display: block; }
-    .completed-step { border: 2px solid #050; color: #050; background: #111; display: block; }
-    
-    #warningMsg { color: #ff3333; font-size: 20px; display: none; font-weight: bold; padding: 15px; border: 2px solid #ff3333; width: 80%; max-width: 600px; margin: 0 auto; background: #330000; border-radius: 8px;}
-    
-    #launchArea { display: none; margin-top: 30px; border: 2px solid #0f0; padding: 30px; background: #002200; border-radius: 10px; width: 80%; max-width: 600px; margin: 30px auto; box-shadow: 0 0 20px #0f0; }
-    
-    .screen-armed { color: #ff9900; font-size: 30px; font-weight: bold; text-shadow: 0 0 10px #ff9900; animation: blink 1s infinite; padding: 30px; }
-    .screen-boom { color: #ff0000; font-size: 50px; font-weight: bold; background: #440000; padding: 50px; border-radius: 10px; }
-    .screen-clear { color: #00ffff; font-size: 50px; font-weight: bold; background: #003333; padding: 50px; border-radius: 10px; }
-    
-    @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【極秘】ハッキングポータル</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="app">
+        <!-- ヘッダー -->
+        <header>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('mailer')">M-MAIL</button>
+                <button class="tab-btn" onclick="switchTab('c123-make')">C-123制作ソフト</button>
+                <button class="tab-btn hidden" id="tab-c123-stop" onclick="switchTab('c123-stop')">C-123停止ソフト</button>
+            </div>
+            <div id="timer" class="hidden">10:00</div>
+        </header>
 
-  <h1>🎀デバイス構築システム🎀</h1>
-  <button id="connectBtn" class="btn">▶ 基板に接続する</button>
+        <!-- メーラータブ -->
+        <div id="mailer" class="tab-content active">
+            <h2>受信トレイ</h2>
+            <div id="mail-list">
+                <!-- メールがJSで追加されます -->
+            </div>
+            <div id="mail-body" class="hidden">
+                <h3 id="mail-title"></h3>
+                <p id="mail-text"></p>
+                <button onclick="closeMail()">閉じる</button>
+            </div>
+        </div>
 
-  <div id="gameArea">
-    <div id="warningMsg">⚠ エラー：解除コードが抜けています！接続してください！ ⚠</div>
+        <!-- 制作ソフトタブ -->
+        <div id="c123-make" class="tab-content">
+            <h2>C-123 ハッキングモジュール アセンブラ</h2>
+            <div id="step1-box" class="step-box">
+                <h3>ファイル①：ライト制御プロトコル</h3>
+                <input type="text" id="pass1" placeholder="パスワードを入力">
+                <button onclick="checkPass(1)">ダウンロード</button>
+                <p id="msg1" class="msg"></p>
+            </div>
+            <div id="step2-box" class="step-box hidden">
+                <h3>ファイル②：音響バイパスモジュール</h3>
+                <input type="text" id="pass2" placeholder="パスワードを入力">
+                <button onclick="checkPass(2)">ダウンロード</button>
+                <p id="msg2" class="msg"></p>
+            </div>
+            <div id="step3-box" class="step-box hidden">
+                <h3>ファイル③：7セグメント解析キー</h3>
+                <input type="text" id="pass3" placeholder="パスワードを入力">
+                <button onclick="checkPass(3)">ダウンロード</button>
+                <p id="msg3" class="msg"></p>
+            </div>
+        </div>
 
-<div id="wiringSteps">
-      <div id="step0" class="step-box active-step">
-        <h2>【 手順 0 】共通アースの構築</h2>
-        <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
-          全ての回路の基準となるマイナス極を構築せよ。<br>
-          ・ワイヤーを1本用意し、Arduinoの「<b>GND</b>」ピンから、<br>
-           白い板の「<b>左側の青い線の列（−の列）</b>」の適当な穴へ繋ぐ。
-        </div><br>
-        <button id="btnStep0" class="btn">配線完了</button>
-      </div>
+        <!-- 停止ソフトタブ -->
+        <div id="c123-stop" class="tab-content">
+            <h2>C-123 緊急停止コンソール</h2>
+            <div id="stop-step1">
+                <p>解除のための4つの謎の答えを入力せよ。（※プロトタイプ用：ここでは「解除」と入力）</p>
+                <input type="text" id="stop-pass" placeholder="答えを入力">
+                <button onclick="unlockStopStep2()">解析</button>
+            </div>
+            <div id="stop-step2" class="hidden">
+                <h3 class="danger-text">【警告】手順2</h3>
+                <p>光らなかったライトが本来光るべきタイミングで、メインコードを切断せよ。</p>
+                <div class="light-sim">
+                    <div id="sim-light" class="light"></div>
+                    <p>※手元の基板のシミュレーション</p>
+                </div>
+                <button id="cut-btn" onclick="cutCode()">✂️ コードを切断する</button>
+            </div>
+        </div>
 
-      <div id="step1" class="step-box">
-        <h2>【 手順 1 】タイマーモジュールの接続</h2>
-        <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
-          ディスプレイ裏面の刻印を確認し、4本の線を接続せよ。<br>
-          ・「<b>CLK</b>」 ➔ Arduinoの「<b>2</b>」番ピン<br>
-          ・「<b>DIO</b>」 ➔ Arduinoの「<b>3</b>」番ピン<br>
-          ・「<b>GND</b>」 ➔ 白い板の「<b>左側の青い線の列（−の列）</b>」<br>
-          ・「<b>5V</b>」 ➔ Arduinoの「<b>5V</b>」ピン
-        </div><br>
-        <button id="testTimerBtn" class="btn btn-test">テスト点灯（8888）</button>
-        <button id="btnStep1" class="btn">配線完了</button>
-      </div>
-      
-      <div id="step2" class="step-box">
-        <h2>【 手順 2 】警告スピーカーの設置</h2>
-        <div style="text-align: left; display: inline-block; font-size: 16px; line-height: 1.6;">
-          黒い円柱型のブザーを、白い板の右半分の空きスペースへ接続せよ。<br>
-          <br>
-          １．ブザー本体を挿す<br>
-           ・「<b>長い足</b>」を白い板の「<b>1f</b>」へ<br>
-           ・「<b>短い足</b>」を白い板の「<b>4f</b>」へ<br>
-          ２．ワイヤーで中継する<br>
-           ・ワイヤー1：Arduinoの「<b>12</b>」番から ➔ 白い板の「<b>1j</b>」へ<br>
-           ・ワイヤー2：白い板の「<b>4j</b>」から ➔ 「<b>左側の青い線の列（−の列）</b>」へ
-        </div><br>
-        <button id="testBuzzerBtn" class="btn btn-test">テスト鳴動（1秒）</button>
-        <button id="btnStep2" class="btn">配線完了</button>
-      </div>
-
-      <div id="step3" class="step-box">
-        <h2>【 手順 3 】信号機（LED）の設置</h2>
-        <div style="text-align: left; display: inline-block; font-size: 14px; line-height: 1.5;">
-          4つのLEDと抵抗器を接続せよ。<br>
-          ※LEDの短い足はすべて「<b>左側の青い線の列（−の列）</b>」へ。<br><br>
-          <b>◆ 自動車用（青/緑）</b><br>
-          ・ワイヤー: <b>8</b>番 ➔ <b>1a</b><br>
-          ・抵抗器: <b>1b</b> ➔ <b>5b</b><br>
-          ・LED: 長い足 <b>5a</b> / 短い足 <b>左側の青い列</b><br><br>
-          <b>◆ 自動車用（赤）</b><br>
-          ・ワイヤー: <b>9</b>番 ➔ <b>8a</b><br>
-          ・抵抗器: <b>8b</b> ➔ <b>12b</b><br>
-          ・LED: 長い足 <b>12a</b> / 短い足 <b>左側の青い列</b><br><br>
-          <b>◆ 歩行者用（青/緑）</b><br>
-          ・ワイヤー: <b>10</b>番 ➔ <b>15a</b><br>
-          ・抵抗器: <b>15b</b> ➔ <b>19b</b><br>
-          ・LED: 長い足 <b>19a</b> / 短い足 <b>左側の青い列</b><br><br>
-          <b>◆ 歩行者用（赤）</b><br>
-          ・ワイヤー: <b>11</b>番 ➔ <b>22a</b><br>
-          ・抵抗器: <b>22b</b> ➔ <b>26b</b><br>
-          ・LED: 長い足 <b>26a</b> / 短い足 <b>左側の青い列</b>
-        </div><br>
-        <button id="testLedBtn" class="btn btn-test">テスト点灯（全ライト）</button>
-        <button id="btnStep3" class="btn">配線完了</button>
-      </div>
-      
-      <div id="step4" class="step-box">
-        <h2>【 手順 4 】解除コードの設置</h2>
-        <p>★重要★ 7番ピンのワイヤーを、「<b>左側の青い線の列（−の列）</b>」に繋いでください。</p>
-      </div>
+        <!-- ポップアップモーダル -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h2 id="modal-title">通信傍受</h2>
+                <p id="modal-text">ここにメッセージが入ります</p>
+                <button id="modal-btn" onclick="closeModal()">了解</button>
+            </div>
+        </div>
+        
+        <!-- 記事モーダル (エンディング) -->
+        <div id="article-modal" class="modal hidden">
+            <div class="modal-content article">
+                <h2 id="article-title"></h2>
+                <p id="article-text"></p>
+                <button id="retry-btn" class="hidden" onclick="location.reload()">予備コードを繋いで再挑戦</button>
+            </div>
+        </div>
     </div>
-
-
-    <!-- 起動準備完了エリア -->
-    <div id="launchArea">
-      <h2 style="color:#0f0;">【 システム検証完了 】</h2>
-      <p style="font-size: 18px;">全ての物理配線が正常に接続されたことを確認しました。</p>
-      <button id="startBtn" class="btn" style="background:#cc0000; color:#fff; border-color:#ff3333; font-size: 24px; padding: 15px 40px; margin-top: 20px;">▶ 時限爆弾を起動する</button>
-    </div>
-
-    <!-- 状態画面 -->
-    <div id="armedScreen" style="display:none;" class="screen-armed">
-      ⚠ 警告：時限爆弾が起動しました！ ⚠<br><br>
-      <span style="font-size:20px; color:#fff;">【手順3】で設置した信号機を注視せよ。<br>すべての信号が消灯する『魔の2秒間』を狙い、<br>【手順4】で繋いだ「7番ピンの線」を引き抜け！</span>
-    </div>
-    <div id="boomScreen" style="display:none;" class="screen-boom">💥 爆 発 し ま し た 💥</div>
-    <div id="clearScreen" style="display:none;" class="screen-clear">✨ 爆弾解除 成功 ✨</div>
-  </div>
-
-  <script>
-    let port;
-    let writer;
-    let manualStep0Done = false;
-    let manualStep1Done = false;
-    let manualStep2Done = false;
-    let manualStep3Done = false;
-
-    // 手動ボタン処理
-    document.getElementById('btnStep0').addEventListener('click', () => { manualStep0Done = true; updateUI(); });
-    document.getElementById('btnStep1').addEventListener('click', () => { manualStep1Done = true; updateUI(); });
-    document.getElementById('btnStep2').addEventListener('click', () => { manualStep2Done = true; updateUI(); });
-    document.getElementById('btnStep3').addEventListener('click', () => { manualStep3Done = true; updateUI(); });
-
-    // 接続処理
-    document.getElementById('connectBtn').addEventListener('click', async () => {
-      try {
-        port = await navigator.serial.requestPort();
-        await port.open({ baudRate: 9600 }); 
-        document.getElementById('connectBtn').style.display = 'none';
-        document.getElementById('gameArea').style.display = 'block';
-        writer = port.writable.getWriter();
-        readLoop(); 
-      } catch (e) {
-        alert("エラーが発生しました。");
-      }
-    });
-
-    // コマンド送信関数
-    async function sendCommand(cmd) {
-      if (writer) {
-        const encoder = new TextEncoder();
-        await writer.write(encoder.encode(cmd));
-      }
-    }
-
-    // 各種ボタンの送信処理
-    document.getElementById('testTimerBtn').addEventListener('click', () => sendCommand('T'));
-    document.getElementById('testBuzzerBtn').addEventListener('click', () => sendCommand('B')); // ★ブザー用
-    document.getElementById('testLedBtn').addEventListener('click', () => sendCommand('L'));
-    document.getElementById('startBtn').addEventListener('click', () => sendCommand('S'));
-
-    let currentS7=0;
-    let currentArmed=0, currentDefused=0, currentExploded=0;
-
-    async function readLoop() {
-      const reader = port.readable.getReader();
-      const decoder = new TextDecoder();
-      let buffer = ""; 
-
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          
-          buffer += decoder.decode(value);
-          let lines = buffer.split('\n');
-          buffer = lines.pop(); 
-          
-          for (let line of lines) {
-            line = line.trim();
-            if (line.startsWith("S:")) {
-              let states = line.substring(2).split(','); 
-              currentS7 = parseInt(states[0]);
-              currentArmed = parseInt(states[1]);
-              currentDefused = parseInt(states[2]);
-              currentExploded = parseInt(states[3]);
-              updateUI();
-            }
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      } finally {
-        reader.releaseLock();
-      }
-    }
-
-    function updateUI() {
-      let w = document.getElementById('warningMsg');
-      let stepsArea = document.getElementById('wiringSteps');
-      let launchArea = document.getElementById('launchArea');
-      
-      let st0 = document.getElementById('step0'); let st1 = document.getElementById('step1');
-      let st2 = document.getElementById('step2'); let st3 = document.getElementById('step3');
-      let st4 = document.getElementById('step4');
-
-      w.style.display = 'none'; 
-
-      if (currentExploded === 1) {
-        stepsArea.style.display = 'none'; launchArea.style.display = 'none';
-        document.getElementById('armedScreen').style.display = 'none';
-        document.getElementById('boomScreen').style.display = 'block';
-        return;
-      }
-      if (currentDefused === 1) {
-        stepsArea.style.display = 'none'; launchArea.style.display = 'none';
-        document.getElementById('armedScreen').style.display = 'none';
-        document.getElementById('clearScreen').style.display = 'block';
-        return;
-      }
-      if (currentArmed === 1) {
-        stepsArea.style.display = 'none'; launchArea.style.display = 'none';
-        document.getElementById('armedScreen').style.display = 'block';
-        return;
-      }
-
-      // 手動ステップの表示制御
-      st0.className = manualStep0Done ? 'step-box completed-step' : 'step-box active-step';
-      st1.className = manualStep0Done ? (manualStep1Done ? 'step-box completed-step' : 'step-box active-step') : 'step-box';
-      st2.className = manualStep1Done ? (manualStep2Done ? 'step-box completed-step' : 'step-box active-step') : 'step-box';
-      st3.className = manualStep2Done ? (manualStep3Done ? 'step-box completed-step' : 'step-box active-step') : 'step-box';
-      
-      if (!manualStep0Done || !manualStep1Done || !manualStep2Done || !manualStep3Done) {
-        launchArea.style.display = 'none';
-        st4.className = 'step-box'; 
-        return; 
-      }
-
-      // 手動ステップ完了後の制御（7番が挿さっているか）
-      if (currentS7 === 1) {
-        st4.className = 'step-box completed-step';
-        stepsArea.style.display = 'none';
-        launchArea.style.display = 'block'; 
-      } else {
-        st4.className = 'step-box active-step';
-        stepsArea.style.display = 'block';
-        launchArea.style.display = 'none';
-        w.style.display = 'block'; 
-      }
-    }
-  </script>
-
+    <script src="main.js"></script>
 </body>
 </html>

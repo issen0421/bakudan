@@ -1,0 +1,115 @@
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    font-family: 'Courier New', monospace;
+    margin: 0;
+    padding: 0;
+}
+#app {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #30363d;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.tab-btn {
+    background: #21262d;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+.tab-btn.active {
+    background: #1f6feb;
+    color: #fff;
+    border-color: #1f6feb;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+.hidden {
+    display: none !important;
+}
+#timer {
+    font-size: 24px;
+    color: #ff7b72;
+    font-weight: bold;
+}
+.step-box {
+    background: #161b22;
+    border: 1px solid #30363d;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+input[type="text"] {
+    padding: 10px;
+    width: 60%;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    color: #fff;
+}
+button {
+    padding: 10px 20px;
+    background: #238636;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    background: #2ea043;
+}
+.danger-text {
+    color: #ff7b72;
+}
+
+/* モーダル */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: #161b22;
+    padding: 30px;
+    border: 1px solid #30363d;
+    max-width: 500px;
+    text-align: center;
+}
+.article {
+    background: #f0f0f0;
+    color: #333;
+    font-family: 'Mincho', serif;
+    text-align: left;
+}
+.article h2 { border-bottom: 2px solid #333; padding-bottom: 10px;}
+
+/* 信号機シミュレーション */
+.light-sim {
+    margin: 20px 0;
+    padding: 20px;
+    background: #000;
+    text-align: center;
+    border: 2px solid #555;
+}
+.light {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #333;
+    margin: 0 auto;
+    box-shadow: 0 0 10px #000 inset;
+}

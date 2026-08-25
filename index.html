@@ -21,9 +21,7 @@
         <!-- メーラータブ -->
         <div id="mailer" class="tab-content active">
             <h2>受信トレイ</h2>
-            <div id="mail-list">
-                <!-- メールがJSで追加されます -->
-            </div>
+            <div id="mail-list"></div>
             <div id="mail-body" class="hidden">
                 <h3 id="mail-title"></h3>
                 <p id="mail-text"></p>
@@ -34,31 +32,65 @@
         <!-- 制作ソフトタブ -->
         <div id="c123-make" class="tab-content">
             <h2>C-123 ハッキングモジュール アセンブラ</h2>
-            <div id="step1-box" class="step-box">
+            
+            <!-- STEP 0: デバイス接続 -->
+            <div id="connect-screen" class="step-box">
+                <h3>システムリンク待機中...</h3>
+                <p>PCに基板をUSBで接続し、以下のボタンを押してリンクを確立してください。</p>
+                <button onclick="connectDevice()" class="primary-btn">🔌 デバイスと接続</button>
+            </div>
+
+            <!-- STEP 1: ライト配線 & パスワード -->
+            <div id="wiring-1" class="step-box hidden">
+                <h3>手順1：ライト配線図</h3>
+                <p>封筒①を開け、指示書通りに基板へライトを配線してください。<br>システムが配線を検知すると自動で進みます。</p>
+                <div class="wiring-img">【ライト配線図の画像】</div>
+                <button onclick="advanceStep('pass-1')" class="fallback-btn">配線完了（次へ進む）</button>
+            </div>
+            <div id="pass-1" class="step-box hidden">
                 <h3>ファイル①：ライト制御プロトコル</h3>
-                <input type="text" id="pass1" placeholder="パスワードを入力">
+                <p>ライトの光り方とメテオの情報を元にパスワードを入力せよ。</p>
+                <input type="text" id="input-pass-1" placeholder="パスワードを入力">
                 <button onclick="checkPass(1)">ダウンロード</button>
-                <p id="msg1" class="msg"></p>
+                <p id="msg-1" class="msg"></p>
             </div>
-            <div id="step2-box" class="step-box hidden">
+
+            <!-- STEP 2: ブザー配線 & パスワード -->
+            <div id="wiring-2" class="step-box hidden">
+                <h3>手順2：ブザー配線図</h3>
+                <p>封筒②を開け、指示書通りにブザーを配線してください。</p>
+                <div class="wiring-img">【ブザー配線図の画像】</div>
+                <button onclick="advanceStep('pass-2')" class="fallback-btn">配線完了（次へ進む）</button>
+            </div>
+            <div id="pass-2" class="step-box hidden">
                 <h3>ファイル②：音響バイパスモジュール</h3>
-                <input type="text" id="pass2" placeholder="パスワードを入力">
+                <p>ブザーの鳴り方とメテオの情報を元にパスワードを入力せよ。</p>
+                <input type="text" id="input-pass-2" placeholder="パスワードを入力">
                 <button onclick="checkPass(2)">ダウンロード</button>
-                <p id="msg2" class="msg"></p>
+                <p id="msg-2" class="msg"></p>
             </div>
-            <div id="step3-box" class="step-box hidden">
+
+            <!-- STEP 3: モニター配線 & パスワード -->
+            <div id="wiring-3" class="step-box hidden">
+                <h3>手順3：7セグモニター配線図</h3>
+                <p>封筒③を開け、指示書通りにモニターを配線してください。</p>
+                <div class="wiring-img">【モニター配線図の画像】</div>
+                <button onclick="advanceStep('pass-3')" class="fallback-btn">配線完了（次へ進む）</button>
+            </div>
+            <div id="pass-3" class="step-box hidden">
                 <h3>ファイル③：7セグメント解析キー</h3>
-                <input type="text" id="pass3" placeholder="パスワードを入力">
+                <p>モニターの表示とメテオの情報を元にパスワードを入力せよ。</p>
+                <input type="text" id="input-pass-3" placeholder="パスワードを入力">
                 <button onclick="checkPass(3)">ダウンロード</button>
-                <p id="msg3" class="msg"></p>
+                <p id="msg-3" class="msg"></p>
             </div>
         </div>
 
-        <!-- 停止ソフトタブ -->
+        <!-- 停止ソフトタブ (罠発動後) -->
         <div id="c123-stop" class="tab-content">
             <h2>C-123 緊急停止コンソール</h2>
             <div id="stop-step1">
-                <p>解除のための4つの謎の答えを入力せよ。（※プロトタイプ用：ここでは「解除」と入力）</p>
+                <p>解除のための4つの謎の答えを入力せよ。（※テスト用正解: <code>解除</code>）</p>
                 <input type="text" id="stop-pass" placeholder="答えを入力">
                 <button onclick="unlockStopStep2()">解析</button>
             </div>
@@ -73,21 +105,22 @@
             </div>
         </div>
 
-        <!-- ポップアップモーダル -->
+        <!-- 共通モーダル -->
         <div id="modal" class="modal">
             <div class="modal-content">
-                <h2 id="modal-title">通信傍受</h2>
+                <h2 id="modal-title">ボスからの通信</h2>
                 <p id="modal-text">ここにメッセージが入ります</p>
                 <button id="modal-btn" onclick="closeModal()">了解</button>
             </div>
         </div>
         
-        <!-- 記事モーダル (エンディング) -->
+        <!-- エンド記事モーダル -->
         <div id="article-modal" class="modal hidden">
             <div class="modal-content article">
                 <h2 id="article-title"></h2>
                 <p id="article-text"></p>
-                <button id="retry-btn" class="hidden" onclick="location.reload()">予備コードを繋いで再挑戦</button>
+                <button id="retry-btn" class="hidden fallback-btn" onclick="location.reload()">予備コードを繋いで再挑戦</button>
+                <button id="extra-btn" class="hidden primary-btn" onclick="alert('【Extra Clear!】 逃走車をハッキングし、ボスを警察に突き出した！')">ボスの逃走車をハッキングする</button>
             </div>
         </div>
     </div>
